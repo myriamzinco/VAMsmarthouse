@@ -1,14 +1,14 @@
 package it.unibs.VAMsmarthouse;
 
-public abstract class Sensore<T> implements Runnable { // nel ncaso usi abstract uso implements
+public abstract class Sensore<T> implements Runnable { // nel caso usi abstract uso implements
 
 	protected boolean running;
 	protected long time;
-	protected int id;
+	protected String id;
 	protected String type;
 	protected T value;
 
-	public Sensore(int id, long time, String type) {
+	public Sensore(String id, long time, String type) {
 		this.id = id;
 		this.time = time;
 		this.type = type;
@@ -18,7 +18,7 @@ public abstract class Sensore<T> implements Runnable { // nel ncaso usi abstract
 		return "Sensore di Temperatura";
 	}
 
-	public int getID() {
+	public String getID() {
 		return id;
 	}
 
