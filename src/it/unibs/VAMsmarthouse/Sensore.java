@@ -15,7 +15,7 @@ public abstract class Sensore<T> implements Runnable { // nel caso usi abstract 
 	}
 
 	public String getType() {
-		return "Sensore di Temperatura";
+		return type;
 	}
 
 	public String getID() {

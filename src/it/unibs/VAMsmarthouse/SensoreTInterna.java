@@ -24,5 +24,4 @@ public class SensoreTInterna extends Sensore<Double> {
 		return esterna.getValue() + (-5 + random.nextDouble() * 10) + offset;
 	}
 
-}// sicuramente poi dovremo sistemare il fatto che se ho due sensori interni che
-	// lavorano in sincro, mi devono generare sicuramente la sessa temperatura
+}
