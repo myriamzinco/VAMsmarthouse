@@ -8,7 +8,7 @@ public class Centralina {
 	private ArrayList<Sensore<?>> sensori = new ArrayList<>();
 	private ArrayList<Elettrodomestico> elettrodomestici = new ArrayList<>();
 
-	public void aggiungiSensore(Sensore<?> s) {
+	public void addSensore(Sensore<?> s) {
 		sensori.add(s);
 		new Thread(s).start();
 
@@ -18,12 +18,21 @@ public class Centralina {
 		return sensori;
 	}
 
-	public void aggiungiElettrodomestico(Elettrodomestico e) {
+	public void addElettrodomestico(Elettrodomestico e) {
 		elettrodomestici.add(e);
 		new Thread(e).start();
 	}
 
-	public ArrayList<Elettrodomestico> getElettrodomestico() {
+	public ArrayList<Elettrodomestico> getElettrodomestici() {
 		return elettrodomestici;
+	}
+
+	public void stopAll() {
+		for (Sensore<?> s : sensori) {
+			s.stop();
+		}
+		for (Elettrodomestico e : elettrodomestici) {
+			e.stop();
+		}
 	}
 }

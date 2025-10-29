@@ -11,6 +11,8 @@ public abstract class Elettrodomestico implements Runnable {
 		this.id = id;
 		this.time = time;
 		this.type = type;
+		this.stato = StatoElettrodomestico.SPENTO;
+
 	}
 
 	protected Sensore<?> sensore;
@@ -40,6 +42,7 @@ public abstract class Elettrodomestico implements Runnable {
 
 	@Override
 	public void run() {
+		running = true;
 		while (running) {
 			stato = generaStato();
 
@@ -56,6 +59,11 @@ public abstract class Elettrodomestico implements Runnable {
 		if (sensore != null) {
 			sensore.stop();
 		}
+	}
+
+	@Override
+	public String toString() {
+		return String.format("[%s] ID=%s, Stato=%s", type, id, stato);
 	}
 
 }

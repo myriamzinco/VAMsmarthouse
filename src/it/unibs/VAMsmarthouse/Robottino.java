@@ -21,9 +21,7 @@ public class Robottino extends Elettrodomestico {
 			return StatoElettrodomestico.SPENTO;
 
 		case RUNNING:
-			// controlla se il sensore è presente
 			if (sensore != null && sensore.getValue() != null) {
-				// usa il sensore per decidere casualmente l'errore
 				if (random.nextInt(100) < 90) {
 					return StatoElettrodomestico.RUNNING;
 				} else {
@@ -32,7 +30,6 @@ public class Robottino extends Elettrodomestico {
 					return StatoElettrodomestico.ERRORE;
 				}
 			} else {
-				// se sensore assente, comportamento originale
 				return StatoElettrodomestico.ERRORE;
 			}
 

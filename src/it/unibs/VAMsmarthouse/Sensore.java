@@ -28,6 +28,7 @@ public abstract class Sensore<T> implements Runnable { // nel caso usi abstract 
 
 	@Override
 	public void run() {
+		running = true;
 		while (running) {
 			value = generaValore();
 			try {
@@ -42,6 +43,11 @@ public abstract class Sensore<T> implements Runnable { // nel caso usi abstract 
 
 	public void stop() {
 		running = false;
+	}
+
+	@Override
+	public String toString() {
+		return String.format("[%s] ID=%s, Value=%s", type, id, value);
 	}
 
 }
