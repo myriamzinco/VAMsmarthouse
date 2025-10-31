@@ -3,7 +3,7 @@ package it.unibs.VAMsmarthouse;
 public class SensoreCO2 extends Sensore<Double> {
 
 	public SensoreCO2(String id, long time, String type) {
-		super(id, time, "Humidity");
+		super(id, time, "CO2");
 	}
 
 	@Override

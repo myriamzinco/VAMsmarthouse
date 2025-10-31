@@ -9,6 +9,7 @@ public class Lavastoviglie extends Elettrodomestico {
 		super(id, time, "Lavastoviglie");
 	}
 
+//aggiungere prestato per tenere storicità
 	@Override
 	public StatoElettrodomestico generaStato() {
 		switch (stato) {
