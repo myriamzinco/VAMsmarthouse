@@ -2,8 +2,8 @@ package it.unibs.VAMsmarthouse;
 
 public class SensoreMovimento extends Sensore<Boolean> {
 
-	public SensoreMovimento(String id, long time) {
-		super(id, time, "Movimento");
+	public SensoreMovimento(String id) {
+		super(id, 5000, "Movimento");
 	}
 
 	@Override
@@ -12,4 +12,8 @@ public class SensoreMovimento extends Sensore<Boolean> {
 		return num == 1;
 	}
 
+	@Override
+	public String toString() {
+		return String.format("[%s] ID=%s, Value=%s", type, id, value);
+	}
 }

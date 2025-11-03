@@ -44,7 +44,6 @@ public class Robottino extends Elettrodomestico {
 	}
 
 //aggiungere metodo del se e solo se oppure roba qui sotto ma è troppo difficile
-//dizionario  elementi chiave-valore chiave stato spento (0), running(1), errore con ognuno codice di errore 
 	public TipoErroreRobottino getTipoErrore() {
 		return this.tipoErrore;
 	}

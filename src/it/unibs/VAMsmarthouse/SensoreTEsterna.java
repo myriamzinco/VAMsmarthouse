@@ -14,8 +14,15 @@ public class SensoreTEsterna extends Sensore<Double>// nel generics devi usare l
 
 	@Override
 	protected Double generaValore()// i metodi astratti si overridano tutti
-	{
-		return -5 + (40 * Math.random());
+	{// sistemiamo il problema della coerenza con il valore precedente
+		if (value == null) {
+			return -5 + (40 * random.nextDouble());
+		}
+
+		double variazione = -0.5 + (random.nextDouble());
+		value += variazione;
+
+		return value;
 	}
 
 }

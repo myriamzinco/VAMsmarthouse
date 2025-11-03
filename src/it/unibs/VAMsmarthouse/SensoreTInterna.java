@@ -6,11 +6,11 @@ public class SensoreTInterna extends Sensore<Double> {
 	private static final long COMMON_SEED = 1234L;
 	private final Random random = new Random(COMMON_SEED);
 	private final double offset;
-	private SensoreTEsterna esterna;
+	private SensoreTEsterna sEsterno;
 
-	public SensoreTInterna(String id, SensoreTEsterna esterna, double offset) {
+	public SensoreTInterna(String id, SensoreTEsterna esterna) {
 		super(id, 500, "Temperatura interna");
-		this.esterna = esterna;
+		this.sEsterno = esterna;
 		switch (id) {
 		case "t-0" -> this.offset = 0.5;
 		case "t-1" -> this.offset = 1.5;
@@ -19,9 +19,18 @@ public class SensoreTInterna extends Sensore<Double> {
 	}
 
 	@Override
-	protected Double generaValore()// i metodi astratti si overridano tutti
-	{
-		return esterna.getValue() + (-5 + random.nextDouble() * 10) + offset;
+	protected Double generaValore() {
+		Double esterna = sEsterno.getValue();
+		if (esterna == null) {
+			return 20.0 + offset;
+		}
+		if (value == null) {
+			value = esterna + (-1 + random.nextDouble() * 5) + offset;
+			return value;
+		}
+		double nuova = (value * 0.8) + (esterna * 0.2) + offset;
+		return nuova;
+
 	}
 
 }
