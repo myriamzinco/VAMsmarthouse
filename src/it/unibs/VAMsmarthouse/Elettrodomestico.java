@@ -33,7 +33,6 @@ public abstract class Elettrodomestico implements Runnable {
 
 	public void setSensore(Sensore<?> s) {
 		this.sensore = s;
-		new Thread(s).start();
 	}
 
 	public Sensore<?> getSensore() {
@@ -43,6 +42,7 @@ public abstract class Elettrodomestico implements Runnable {
 	@Override
 	public void run() {
 		running = true;
+		stato = StatoElettrodomestico.RUNNING;
 		while (running) {
 			stato = generaStato();
 
@@ -51,6 +51,13 @@ public abstract class Elettrodomestico implements Runnable {
 			} catch (InterruptedException e) {
 				running = false;
 			}
+		}
+	}
+
+	public void start() {
+		if (!running) {
+			running = true;
+			new Thread(this).start();
 		}
 	}
 
@@ -63,7 +70,7 @@ public abstract class Elettrodomestico implements Runnable {
 
 	@Override
 	public String toString() {
-		return String.format("[%s] ID=%s, Stato=%s", type, id, stato);
+		return String.format("[%s] ID=%s, Stato=%s", type, id, stato != null ? stato : StatoElettrodomestico.SPENTO);
 	}
 
 }

@@ -10,8 +10,8 @@ public class Robottino extends Elettrodomestico {
 	private final Random random = new Random();
 	private TipoErroreRobottino tipoErrore;
 
-	public Robottino(String id, long time, String type) {
-		super(id, time, "Robot Lavapavimenti");
+	public Robottino(String id) {
+		super(id, 1000, "Robot Lavapavimenti");
 	}
 
 	@Override
@@ -21,26 +21,21 @@ public class Robottino extends Elettrodomestico {
 			return StatoElettrodomestico.SPENTO;
 
 		case RUNNING:
-			if (sensore != null && sensore.getValue() != null) {
-				if (random.nextInt(100) < 90) {
-					return StatoElettrodomestico.RUNNING;
-				} else {
-					stato = StatoElettrodomestico.ERRORE;
-					tipoErrore = generaErroreCasuale();
-					return StatoElettrodomestico.ERRORE;
-				}
+			if (random.nextInt(100) < 90) {
+				return StatoElettrodomestico.RUNNING;
 			} else {
+				stato = StatoElettrodomestico.ERRORE;
+				tipoErrore = generaErroreCasuale();
 				return StatoElettrodomestico.ERRORE;
+
 			}
 
 		case ERRORE:
-			if (sensore != null && sensore.getValue() != null) {
-				tipoErrore = generaErroreCasuale();
-			}
 			return StatoElettrodomestico.ERRORE;
 		default:
 			return stato;
 		}
+
 	}
 
 //aggiungere metodo del se e solo se oppure roba qui sotto ma è troppo difficile
@@ -59,5 +54,13 @@ public class Robottino extends Elettrodomestico {
 		default:
 			return TipoErroreRobottino.BLOCCATO;
 		}
+	}
+
+	@Override
+	public String toString() {
+		if (stato == StatoElettrodomestico.ERRORE && tipoErrore != null) {
+			return String.format("[%s] ID=%s, Stato=%s (%s)", type, id, stato, tipoErrore);
+		}
+		return super.toString();
 	}
 }

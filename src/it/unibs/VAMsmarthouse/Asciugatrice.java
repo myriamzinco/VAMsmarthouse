@@ -5,8 +5,8 @@ import java.util.Random;
 public class Asciugatrice extends Elettrodomestico {
 	private final Random random = new Random();
 
-	public Asciugatrice(String id, long time) {
-		super(id, time, "Asciugatrice");
+	public Asciugatrice(String id) {
+		super(id, 1000, "Asciugatrice");
 	}
 
 	@Override
@@ -16,11 +16,8 @@ public class Asciugatrice extends Elettrodomestico {
 			return StatoElettrodomestico.SPENTO;
 
 		case RUNNING:
-			if (sensore != null && sensore.getValue() != null) {
-				return random.nextInt(100) < 90 ? StatoElettrodomestico.RUNNING : StatoElettrodomestico.ERRORE;
-			} else {
-				return StatoElettrodomestico.ERRORE;
-			}
+
+			return random.nextInt(100) < 90 ? StatoElettrodomestico.RUNNING : StatoElettrodomestico.ERRORE;
 
 		case ERRORE:
 			return StatoElettrodomestico.ERRORE;

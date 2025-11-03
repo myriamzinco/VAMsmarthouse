@@ -45,6 +45,13 @@ public abstract class Sensore<T> implements Runnable { // nel caso usi abstract 
 //aggiungere anche timeStamp lettura valori sia in classe sensore sia in elettrodomesito. Poi il metodo genera valore dovrà anche salvarmi l'orario perchè nell'interfaccia va stampato. L'ora va formattata in modo che mi stampi l'ora, i minutin e i secondi e va aggiunta nel toString
 	protected abstract T generaValore(); // indica la specializzazione del sensore
 
+	public void start() {
+		if (!running) {
+			running = true;
+			new Thread(this).start();
+		}
+	}
+
 	public void stop() {
 		running = false;
 	}
