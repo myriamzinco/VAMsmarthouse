@@ -59,7 +59,8 @@ public class Robottino extends Elettrodomestico {
 	@Override
 	public String toString() {
 		if (stato == StatoElettrodomestico.ERRORE && tipoErrore != null) {
-			return String.format("[%s] ID=%s, Stato=%s (%s)", type, id, stato, tipoErrore);
+			return String.format("[%s]  [%s] ID=%s, Stato=%s (%s)", Sensore.timeStamp(), type, id, stato, tipoErrore);
+			
 		}
 		return super.toString();
 	}

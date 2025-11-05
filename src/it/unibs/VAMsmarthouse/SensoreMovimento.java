@@ -3,7 +3,7 @@ package it.unibs.VAMsmarthouse;
 public class SensoreMovimento extends Sensore<Boolean> {
 
 	public SensoreMovimento(String id) {
-		super(id, 5000, "Movimento");
+		super(id, 1000, "Movimento");
 	}
 
 	@Override
@@ -14,6 +14,6 @@ public class SensoreMovimento extends Sensore<Boolean> {
 
 	@Override
 	public String toString() {
-		return String.format("[%s] ID=%s, Value=%s", type, id, value);
+		return String.format("[%s]  [%s] ID=%s, Value=%s ",Sensore.timeStamp(), type, id, value);
 	}
 }

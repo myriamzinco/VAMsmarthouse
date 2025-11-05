@@ -70,7 +70,7 @@ public abstract class Elettrodomestico implements Runnable {
 
 	@Override
 	public String toString() {
-		return String.format("[%s] ID=%s, Stato=%s", type, id, stato != null ? stato : StatoElettrodomestico.SPENTO);
+		return String.format("[%s] [%s] ID=%s, Stato=%s", Sensore.timeStamp(), type, id, stato != null ? stato : StatoElettrodomestico.SPENTO);
 	}
 
 }

@@ -1,5 +1,7 @@
 package it.unibs.VAMsmarthouse;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 public abstract class Sensore<T> implements Runnable { // nel caso usi abstract uso implements
@@ -45,6 +47,11 @@ public abstract class Sensore<T> implements Runnable { // nel caso usi abstract 
 //aggiungere anche timeStamp lettura valori sia in classe sensore sia in elettrodomesito. Poi il metodo genera valore dovrà anche salvarmi l'orario perchè nell'interfaccia va stampato. L'ora va formattata in modo che mi stampi l'ora, i minutin e i secondi e va aggiunta nel toString
 	protected abstract T generaValore(); // indica la specializzazione del sensore
 
+	
+		public static String timeStamp() {
+		    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+		    return LocalDateTime.now().format(formatter);
+		}		
 	public void start() {
 		if (!running) {
 			running = true;
@@ -58,7 +65,7 @@ public abstract class Sensore<T> implements Runnable { // nel caso usi abstract 
 
 	@Override
 	public String toString() {
-		return String.format("[%s] ID=%s, Value=%.2f °C", type, id, value);
+		return String.format("[%s]  [%s] ID=%s, Value=%.2f °C",Sensore.timeStamp(), type, id, value);
 	}
 
 }
