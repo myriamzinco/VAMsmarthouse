@@ -1,45 +1,98 @@
 package it.unibs.VAMsmarthouse;
 
+import java.util.Random;
+
 public class SensoreQualità extends Sensore<Double> {
-	
-	public double umidita; //private o public questi due?
-	public double co2; //cercando su internet dovrebbero essere ppm
+	private boolean inizializzato;
+	private final Random random = new Random();
+	private double umidita; /*
+							 * private o public questi due? Private per l'incapsulamento, servono solo in
+							 * questa classe
+							 */
+	private double co2; // cercando su internet dovrebbero essere ppm
 
 	public SensoreQualità(String id) {
-		super(id, 500, "Qualità");
+		super(id, 500, "Qualità dell'aria");
 	}
 
 	@Override
 	protected Double generaValore() {
-		 umidita = 30 + Math.random() * 50;
-		
-		//qui abbiamo chiesto a chat come poter avere una base dell'umidita per riuscire ad avere co2 coerente
-		
-		double baseCO2 = 400 + (umidita - 30) * 20;
-		co2 = baseCO2 + (Math.random() - 0.5) * 100;
-		
-		System.out.printf("Valori di umidita[%] e CO2[ppm]: %.1f%% & %.0f ppm"); //stampiamo entrambi i valori con l'unità di misura, ma ho paura che non sia una scrittura omogeonea rispetto agli altri sensori
-		
-		if (co2 > 1500) {
-			System.out.println( "Fortemente consigliato aprire le finestre");
-		} else if (co2 > 1000) {
-			System.out.println("Consigliabile aprire le finestre");
-		} else {
-			System.out.println("Qualità dell'aria ottimale!");
+		if (inizializzato == false) {
+			umidita = 20 + random.nextDouble() * 55;
+			co2 = 400 + random.nextDouble() * 1000;
+			inizializzato = true;
+		} else if (inizializzato == true) {
+			double variazioneU = (-0.5 + random.nextDouble()) * 2;
+			umidita += variazioneU;
+			double variazioneCO2 = (-0.5 + random.nextDouble()) * 30;
+			co2 += variazioneCO2;
 		}
-		
+
+		if (umidita < 25)
+			umidita = 25; // manteniamo dei valori realistici in modo tale che non generi robe strane
+		if (umidita > 75)
+			umidita = 75;
+		if (co2 < 350)
+			co2 = 350;
+		if (co2 > 2000)
+			co2 = 2000;
+
+		return co2;
+
+		/*
+		 * qui abbiamo chiesto a chat come poter avere una base dell'umidita per
+		 * riuscire ad avere co2 coerente; aggiungiamo una piccola variazione in co2 e
+		 * in umidita in modo tale che sia coerente con la logica degli altri sensori
+		 * (vedi metodo genera valore in temperatura interna) e coerente con la realtà
+		 */
+
 	}
+
 	public double getUmidita() {
 		return umidita;
 	}
-	
+
 	public double getCO2() {
 		return co2;
 	}
-		
-		
-		return -5 + (40 * Math.random()); //questa riga molto sospicius... ma non so se serva o meno
+
+	@Override
+	public String toString()
+	/*
+	 * quello che hai fatto qui con il controllo degli if va bene, ma non puoi
+	 * metterlo nel genera valore. Il genera valore genera solo co2 e lorestituisce,
+	 * è il to String che stampa, e facendo l'override del toString tupuoi stampare
+	 * quello che vuoi
+	 */
+	{
+		StringBuilder messaggio = new StringBuilder();/*
+														 * introduciamo questa variabile così non devi stampare ogni
+														 * volta il messaggio, ma metti il riferimento nel to string
+														 * così che ti stampi il valore che assume quando entra negli if
+														 */
+		boolean warning = false;
+		messaggio.append(String.format("[Sensore %s] Umidità: %.1f%% | CO₂: %.0f ppm → ", id, umidita, co2));
+		if (co2 > 1500) {
+			warning = true;
+			messaggio.append("CO2 alta, fortemente consigliato aprire le finestre");
+		} else if (co2 > 1000) {
+			warning = true;
+			messaggio.append("Consigliabile aprire le finestre");
+		}
+
+		if (umidita < 30) {
+			warning = true;
+			messaggio.append("Aria troppo secca");
+		} else if (umidita > 70) {
+			warning = true;
+			messaggio.append("Aria troppo umida");
+		}
+
+		if (warning == false) {
+			messaggio.append("Qualità dell'aria ottimale!");
+		}
+		return messaggio.toString();
+
+	}
+
 }
-
-
-//Modificare il sensore in qualità dell'aria e mettere i vari metodi C02 e Umidità', aggiungere come per Testerna il metodo per uniformare con la temperatura precedente
