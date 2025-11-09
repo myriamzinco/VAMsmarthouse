@@ -8,7 +8,7 @@ public class SensoreTEsterna extends Sensore<Double>// nel generics devi usare l
 	private final Random random = new Random(COMMON_SEED);
 
 	public SensoreTEsterna(String id) {
-		super(id, 500, "Temperatura");
+		super(id, 500, "Temperatura esterna");
 
 	}
 
@@ -16,10 +16,11 @@ public class SensoreTEsterna extends Sensore<Double>// nel generics devi usare l
 	protected Double generaValore()// i metodi astratti si overridano tutti
 	{// sistemiamo il problema della coerenza con il valore precedente
 		if (value == null) {
-			return -5 + (40 * random.nextDouble());
+			value = 10 + 20 * random.nextDouble();
+			return value;
 		}
 
-		double variazione = -0.5 + (random.nextDouble());
+		double variazione = -0.03 + (random.nextDouble() * 0.2);
 		value += variazione;
 
 		return value;

@@ -25,12 +25,15 @@ import javax.swing.SwingConstants;
 public class MyFrame {
 	public JFrame frame;
 	public JPanel mainPanel;
+	public CardLayout cardLayout;
+
 	private JScrollPane scrollSensori, scrollElettro;
 	private JPanel leftPanelS;
 	private JPanel leftPanelE;
 	private boolean storicoSVisibile = false;
-	private boolean storicoEVisibile = false;;
-	public CardLayout cardLayout;
+	private boolean storicoEVisibile = false;
+	private JButton closeStoricoS;
+	private JButton closeStoricoE;
 	private javax.swing.Timer timerSensoriPanel, timerElettroPanel;
 	private Centralina centralina = new Centralina();
 
@@ -72,22 +75,24 @@ public class MyFrame {
 		cardLayout = new CardLayout();
 		mainPanel = new JPanel(cardLayout); // questo è il panel per gestire le card
 		mainPanel.add(menuPanel(), "menu"); // prima card
-		frame.add(mainPanel); // aggiunge il pannello che gestisce le card alla finestra
 
 		mainPanel.add(createPanel("Sensori", centralina.getSensori(), centralina::startAllS, centralina::stopAllS,
-				s -> s.getType(), s -> s.start(), s -> s.stop(), () -> centralina.statoSensori()), "sensori");
+				s -> s.getType(), s -> s.start(), s -> s.stop(), () -> centralina.statoSensori()), "Sensori");
 
 		mainPanel.add(createPanel("Elettrodomestici", centralina.getElettrodomestici(), centralina::startAllE,
 				centralina::stopAllE, e -> e.getType(), e -> e.start(), e -> e.stop(),
-				() -> centralina.statoElettrodomestici()), "elettrodomestici");
+				() -> centralina.statoElettrodomestici()), "Elettrodomestici");
+
+		frame.add(mainPanel); // aggiunge il pannello che gestisce le card alla finestra
+		frame.setVisible(true);
 	}
 
 	protected void viewPanelS() {
-		cardLayout.show(mainPanel, "sensori"); // "sensori" è il nome della card creata con creaPannello
+		cardLayout.show(mainPanel, "Sensori"); // "sensori" è il nome della card creata con creaPannello
 	}
 
 	protected void viewPanelE() {
-		cardLayout.show(mainPanel, "elettrodomestici"); // nome della card corrispondente
+		cardLayout.show(mainPanel, "Elettrodomestici"); // nome della card corrispondente
 	}
 
 //Pannello menù
@@ -106,13 +111,12 @@ public class MyFrame {
 		casaLabel.setForeground(Color.WHITE);
 		casaLabel.setFont(new Font("Arial", Font.BOLD, 35));
 		casaLabel.setOpaque(false);
-
-		gbc.gridy = 0; // prima riga
+		gbc.gridy = 0; // lo mette nella prima riga
 		menuPanel.add(casaLabel, gbc);
 
 		JButton btnViewS = new JButton("Visualizza sensori");
 		btnViewS.addActionListener(_ -> viewPanelS());
-		btnViewS.setBackground(Color.WHITE);
+		btnViewS.setOpaque(false); // nessuno sfondo
 		btnViewS.setForeground(Color.BLACK);
 		btnViewS.setFocusPainted(false);
 		btnViewS.setFont(new Font("Arial", Font.BOLD, 16));
@@ -122,7 +126,7 @@ public class MyFrame {
 
 		JButton btnViewE = new JButton("Visualizza elettrodomestici");
 		btnViewE.addActionListener(_ -> viewPanelE());
-		btnViewE.setBackground(Color.WHITE);
+		btnViewE.setOpaque(false);
 		btnViewE.setForeground(Color.BLACK);
 		btnViewE.setFocusPainted(false);
 		btnViewE.setFont(new Font("Arial", Font.BOLD, 16));
@@ -135,21 +139,20 @@ public class MyFrame {
 			centralina.startAllS();
 			storicoSVisibile = true;
 			scrollSensori.setVisible(true);
-			cardLayout.show(mainPanel, "sensori");
+			closeStoricoS.setVisible(true);
+			cardLayout.show(mainPanel, "Sensori");
 			if (timerSensoriPanel != null && !timerSensoriPanel.isRunning()) {
 				timerSensoriPanel.start();
 			}
 			for (Component comp : leftPanelS.getComponents()) {
 				if (comp instanceof JButton btn) {
-					String text = btn.getText();
-					if (text.startsWith("Avvia")) {
-						String type = text.replace("Avvia ", "");
-						btn.setText(type + " Stop ");
-					}
+
+					btn.setText(btn.getText() + " Stop");
+					btn.putClientProperty("running", true);
 				}
 			}
 		});
-		btnStartAllS.setBackground(Color.WHITE);
+		btnStartAllS.setOpaque(false);
 		btnStartAllS.setForeground(Color.BLACK);
 		btnStartAllS.setFocusPainted(false);
 		btnStartAllS.setFont(new Font("Arial", Font.BOLD, 16));
@@ -162,7 +165,9 @@ public class MyFrame {
 			centralina.startAllE();
 			storicoEVisibile = true;
 			scrollElettro.setVisible(true);
-			cardLayout.show(mainPanel, "elettrodomestici");
+			closeStoricoE.setVisible(true);
+
+			cardLayout.show(mainPanel, "Elettrodomestici");
 
 			if (timerElettroPanel != null) {
 				if (!timerElettroPanel.isRunning()) {
@@ -171,15 +176,12 @@ public class MyFrame {
 			}
 			for (Component comp : leftPanelE.getComponents()) {
 				if (comp instanceof JButton btn) {
-					String text = btn.getText();
-					if (text.startsWith("Avvia")) {
-						String type = text.replace("Avvia ", "");
-						btn.setText(type + " Stop ");
-					}
+					btn.setText(btn.getText() + " Stop");
+					btn.putClientProperty("running", true);
 				}
 			}
 		});
-		btnStartAllE.setBackground(Color.WHITE);
+		btnStartAllE.setOpaque(false);
 		btnStartAllE.setForeground(Color.BLACK);
 		btnStartAllE.setFocusPainted(false);
 		btnStartAllE.setFont(new Font("Arial", Font.BOLD, 16));
@@ -208,15 +210,46 @@ public class MyFrame {
 		JPanel panel = new Sfondo();
 		panel.setLayout(new BorderLayout());
 
-		// --- Area storico ---
+		// Storico
 		JTextArea storico = new JTextArea(25, 40);
 		storico.setEditable(false);
+		storico.setLineWrap(true);
+		storico.setWrapStyleWord(true);
 		JScrollPane scroll = new JScrollPane(storico);
 		scroll.setPreferredSize(new Dimension(400, 500));
 		scroll.setVisible(false);
-		panel.add(scroll, BorderLayout.EAST);
 
-		// --- Pannello centrale con i bottoni ---
+		// Pulsante x per chiudere storico
+		JButton closeStorico = new JButton("X");
+		closeStorico.setFont(new Font("Arial", Font.BOLD, 14));
+		closeStorico.setOpaque(true);
+		closeStorico.setBackground(Color.WHITE);// nessuno sfondo al bottone x
+		closeStorico.setForeground(Color.BLACK);
+		closeStorico.setFocusPainted(false);
+		closeStorico.setBorderPainted(false);
+		closeStorico.setPreferredSize(new Dimension(50, 40));
+		closeStorico.setVisible(false);
+		closeStorico.addActionListener(_ -> {
+
+			scroll.setVisible(false);
+			closeStorico.setVisible(false);
+		});
+		if (titolo.equals("Sensori")) {
+			closeStoricoS = closeStorico;
+		} else {
+			closeStoricoE = closeStorico;
+		}
+		// Pannello per tenere insieme titolo X e area testo
+		JPanel barraExit = new JPanel(new BorderLayout());
+		barraExit.setOpaque(true);
+		barraExit.setBackground(Color.WHITE);
+		barraExit.add(closeStorico, BorderLayout.EAST);
+
+		JPanel storicoPanel = new JPanel(new BorderLayout());
+		storicoPanel.add(barraExit, BorderLayout.NORTH);
+		storicoPanel.add(scroll, BorderLayout.CENTER);
+		panel.add(storicoPanel, BorderLayout.EAST);
+		// Pannello centrale con i bottoni
 		JPanel centerPanel = new JPanel(new GridBagLayout());
 		centerPanel.setOpaque(false);
 		GridBagConstraints gbc = new GridBagConstraints();
@@ -232,17 +265,23 @@ public class MyFrame {
 
 		int y = 1;
 		for (T elemento : elementi) {
-			JButton btn = new JButton("Avvia " + getType.apply(elemento));
+			if (titolo.equals("Sensori") && (elemento instanceof SensoreTInterna)) {
+				continue; // salta t0 e t1 perchè devo creare il bottone a parte per metterli insieme
+			}
+			JButton btn = new JButton(getType.apply(elemento));
 			btn.setPreferredSize(new Dimension(250, 40));
-			btn.setBackground(Color.WHITE);
 			btn.setFont(new Font("Arial", Font.BOLD, 16));
+			btn.putClientProperty("running", false); // proprietà running
 
 			btn.addActionListener(_ -> {
-				if (btn.getText().startsWith("Avvia")) {
+				boolean running = (boolean) btn.getClientProperty("running");
+				if (!running) {
 					startElemento.accept(elemento);
 					btn.setText(getType.apply(elemento) + " Stop");
+					btn.putClientProperty("running", true);
 					storico.append(getType.apply(elemento) + " Avviato\n");
 					scroll.setVisible(true);
+					closeStorico.setVisible(true);
 					if (titolo.equals("Sensori")) {
 						if (timerSensoriPanel != null && !timerSensoriPanel.isRunning())
 							timerSensoriPanel.start();
@@ -252,13 +291,47 @@ public class MyFrame {
 					}
 				} else {
 					stopElemento.accept(elemento);
-					btn.setText("Avvia " + getType.apply(elemento));
+					btn.setText(getType.apply(elemento));
+					btn.putClientProperty("running", false);
 					storico.append(getType.apply(elemento) + " Fermato\n");
 				}
 			});
 
 			gbc.gridy = y++;
 			centerPanel.add(btn, gbc);
+		}
+
+		if (titolo.equals("Sensori")) {
+			SensoreTInterna t0 = centralina.t0;
+			SensoreTInterna t1 = centralina.t1;
+			JButton btnTempInterna = new JButton("Temperature Interne");
+
+			btnTempInterna.setPreferredSize(new Dimension(250, 40));
+			btnTempInterna.setOpaque(false);
+			btnTempInterna.setFont(new Font("Arial", Font.BOLD, 16));
+			btnTempInterna.putClientProperty("running", false);
+			gbc.gridy = y++;
+			centerPanel.add(btnTempInterna, gbc);
+
+			btnTempInterna.addActionListener(_ -> {
+				if (!btnTempInterna.getText().endsWith("Stop")) {
+					t0.start();
+					t1.start();
+					btnTempInterna.setText("Temperature Interne Stop");
+					btnTempInterna.putClientProperty("running", true);
+					storico.append(String.format("Temperature interne avviate\n"));
+					scroll.setVisible(true);
+					closeStorico.setVisible(true);
+					if (timerSensoriPanel != null && !timerSensoriPanel.isRunning())
+						timerSensoriPanel.start();
+				} else {
+					t0.stop();
+					t1.stop();
+					btnTempInterna.setText("Temperature Interne");
+					btnTempInterna.putClientProperty("running", false);
+					storico.append(String.format("Temperature interne fermate\n"));
+				}
+			});
 		}
 
 		panel.add(centerPanel, BorderLayout.CENTER);
@@ -275,12 +348,23 @@ public class MyFrame {
 		stop.addActionListener(_ -> {
 			stopAll.run();
 			storico.append("Tutti fermati\n");
+//facciamo in modo che una volta schiacciato stop tutti i pulsanti tornino allo stato iniziale
+			for (Component comp : centerPanel.getComponents()) {
+				if (comp instanceof JButton btn) {
+					String text = btn.getText();
+					if (text.endsWith(" Stop")) {
+						btn.setText(text.substring(0, text.length() - 5));
+						btn.putClientProperty("running", false);
+
+					}
+				}
+			}
 		});
 		bottomPanel.add(stop, BorderLayout.EAST);
 
 		panel.add(bottomPanel, BorderLayout.SOUTH);
 
-		// --- Timer aggiornamento storico ---
+		// Timer storico
 		javax.swing.Timer timer = new javax.swing.Timer(1000, e -> {
 			String stato = statoSupplier.get();
 			if (!stato.isEmpty()) {
@@ -288,6 +372,7 @@ public class MyFrame {
 			}
 		});
 		timer.stop();
+
 		if (titolo.equals("Sensori")) {
 			scrollSensori = scroll;
 			leftPanelS = centerPanel;
@@ -300,5 +385,4 @@ public class MyFrame {
 
 		return panel;
 	}
-
 }

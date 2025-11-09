@@ -74,10 +74,10 @@ public class SensoreQualità extends Sensore<Double> {
 		messaggio.append(String.format("[Sensore %s] Umidità: %.1f%% | CO₂: %.0f ppm → ", id, umidita, co2));
 		if (co2 > 1500) {
 			warning = true;
-			messaggio.append("CO2 alta, fortemente consigliato aprire le finestre");
+			messaggio.append("CO2 alta, fortemente consigliato aprire le finestre. ");
 		} else if (co2 > 1000) {
 			warning = true;
-			messaggio.append("Consigliabile aprire le finestre");
+			messaggio.append("Consigliabile aprire le finestre. ");
 		}
 
 		if (umidita < 30) {

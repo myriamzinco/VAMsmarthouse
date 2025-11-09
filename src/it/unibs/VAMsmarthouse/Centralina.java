@@ -6,24 +6,25 @@ public class Centralina {
 	private ArrayList<Sensore<?>> sensori = new ArrayList<>();
 	private ArrayList<Elettrodomestico> elettrodomestici = new ArrayList<>();
 
+	protected SensoreTEsterna te = new SensoreTEsterna("se");
+	protected SensoreTInterna t0 = new SensoreTInterna("t-0", te);
+	protected SensoreTInterna t1 = new SensoreTInterna("t-1", te);
+	protected SensoreQualità q = new SensoreQualità("q");
+	protected SensoreMovimento m = new SensoreMovimento("m");
+
+	protected Asciugatrice a = new Asciugatrice("a");
+	protected Lavatrice lvt = new Lavatrice("lvt");
+	protected Lavastoviglie lvs = new Lavastoviglie("lvs");
+	protected Robottino r = new Robottino("r");
+
 //prende tutti i valori e li manda in stampa.gestisce i sensori
 	public Centralina() {
-		SensoreTEsterna te = new SensoreTEsterna("se");
-		SensoreTInterna t0 = new SensoreTInterna("t-0", te);
-		SensoreTInterna t1 = new SensoreTInterna("t-1", te);
-		SensoreQualità q = new SensoreQualità("q");
-		SensoreMovimento m = new SensoreMovimento("m");
-
 		addSensore(te);
 		addSensore(t0);
 		addSensore(t1);
 		addSensore(q);
 		addSensore(m);
 
-		Asciugatrice a = new Asciugatrice("a");
-		Lavatrice lvt = new Lavatrice("lvt");
-		Lavastoviglie lvs = new Lavastoviglie("lvs");
-		Robottino r = new Robottino("r");
 		addElettrodomestico(a);
 		addElettrodomestico(lvt);
 		addElettrodomestico(lvs);
@@ -41,14 +42,14 @@ public class Centralina {
 	}
 
 	public String statoSensori() { // prende tutti i sensori attivi e con sb costurisce ciò che vuole mostrare inn
-									// interfaccia grafica
+									// interfaccia grafica. Abbiamo aggiunto il controllo per vedere se il sensore è
+									// di temperatura interna per poter stampare le due temperature dei piani
 		StringBuilder sb = new StringBuilder();
 		for (Sensore<?> s : sensori) {
 			if (s.running) {
-				sb.append(s.toString()).append("\n");
+				sb.append(s.toString()).append("\n"); // include anche t0 e t1
 			}
 		}
-
 		return sb.toString();
 	}
 

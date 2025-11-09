@@ -6,6 +6,7 @@ public class SensoreMovimento extends Sensore<Boolean> {
 		super(id, 1000, "Movimento");
 	}
 
+//Per questo metood ipotizziamo ci sia una telecamera che da sul vialetto e sulla strada, e che quindi rilevi i movimenti per esempio di pedoni e/o macchine
 	@Override
 	protected Boolean generaValore() {
 		int num = (int) (Math.random() * 2);
@@ -14,6 +15,6 @@ public class SensoreMovimento extends Sensore<Boolean> {
 
 	@Override
 	public String toString() {
-		return String.format("[%s]  [%s] ID=%s, Value=%s ",Sensore.timeStamp(), type, id, value);
+		return String.format("[%s]  [%s] ID=%s, Value=%s ", Sensore.timeStamp(), type, id, value);
 	}
 }

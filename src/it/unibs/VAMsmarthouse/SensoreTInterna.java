@@ -7,6 +7,8 @@ public class SensoreTInterna extends Sensore<Double> {
 	private final Random random = new Random(COMMON_SEED);
 	private final double offset;
 	private SensoreTEsterna sEsterno;
+	private static final double TMIN = 15.0;
+	private static final double TMAX = 26.0;
 
 	public SensoreTInterna(String id, SensoreTEsterna esterna) {
 		super(id, 500, "Temperatura interna");
@@ -16,21 +18,36 @@ public class SensoreTInterna extends Sensore<Double> {
 		case "t-1" -> this.offset = 1.5;
 		default -> this.offset = 0.0;
 		}
+
 	}
 
 	@Override
 	protected Double generaValore() {
 		Double esterna = sEsterno.getValue();
 		if (esterna == null) {
-			return 20.0 + offset;
-		}
-		if (value == null) {
-			value = esterna + (-1 + random.nextDouble() * 5) + offset;
+			value = 20.0 + (-0.3 + random.nextDouble() * 0.6) + offset;
+			return value;
+		} else if (esterna <= TMIN) { /*
+										 * aggiungiamo righe da 28 a 34 per mantenere una temperatura "vivibile" in casa
+										 * anche se fuori fa freddo o caldo (supponiamo la presenza di un impianto di
+										 * riscaldamento e condizionatore
+										 */
+			value = 17 + (21 - 17) * random.nextDouble();
+			return value;
+		} else if (esterna >= TMAX) {
+			value = 20 + (24 - 20) * random.nextDouble();
 			return value;
 		}
-		double nuova = (value * 0.8) + (esterna * 0.2) + offset;
-		return nuova;
-
+		if (value == null) {
+			value = esterna + (-0.5 + random.nextDouble() * 2) + offset;
+			return value;
+		} else
+			value = (value * 0.8) + (esterna * 0.2) + offset;
+		return value;
 	}
 
+	@Override
+	public String toString() {
+		return String.format("[%s] [%s] ID=%s, Valore=%.2f °C", Sensore.timeStamp(), type, id, value);
+	}
 }
