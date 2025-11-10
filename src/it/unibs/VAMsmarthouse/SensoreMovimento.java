@@ -1,7 +1,7 @@
 package it.unibs.VAMsmarthouse;
 
 public class SensoreMovimento extends Sensore<Boolean> {
-
+//costruttore che richiama il supercostruttore
 	public SensoreMovimento(String id) {
 		super(id, 1000, "Movimento");
 	}

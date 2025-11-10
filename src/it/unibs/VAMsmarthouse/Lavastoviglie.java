@@ -5,10 +5,14 @@ import java.util.Random;
 public class Lavastoviglie extends Elettrodomestico {
 	private final Random random = new Random();
 
+//costruttore lavastoviglie
 	public Lavastoviglie(String id) {
 		super(id, 1000, "Lavastoviglie");
+		this.stato = (Math.random() < 0.5) ? StatoElettrodomestico.SPENTO : StatoElettrodomestico.RUNNING;
+
 	}
 
+//Metodo genera stato. Se spento resta spento, se running può andare in errore, se in errore resta errore
 	@Override
 	public StatoElettrodomestico generaStato() {
 		switch (stato) {

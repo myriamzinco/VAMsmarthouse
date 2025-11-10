@@ -3,15 +3,15 @@ package it.unibs.VAMsmarthouse;
 import java.util.ArrayList;
 
 public class Centralina {
+//generiamo le arraylist che contengono i sensori e elettrodomestici con sensori
 	private ArrayList<Sensore<?>> sensori = new ArrayList<>();
 	private ArrayList<Elettrodomestico> elettrodomestici = new ArrayList<>();
-
+//generiamo tutit i sensori
 	protected SensoreTEsterna te = new SensoreTEsterna("se");
 	protected SensoreTInterna t0 = new SensoreTInterna("t-0", te);
 	protected SensoreTInterna t1 = new SensoreTInterna("t-1", te);
-	protected SensoreQualità q = new SensoreQualità("q");
 	protected SensoreMovimento m = new SensoreMovimento("m");
-
+	protected SensoreQualità q = new SensoreQualità("q");
 	protected Asciugatrice a = new Asciugatrice("a");
 	protected Lavatrice lvt = new Lavatrice("lvt");
 	protected Lavastoviglie lvs = new Lavastoviglie("lvs");
@@ -22,8 +22,8 @@ public class Centralina {
 		addSensore(te);
 		addSensore(t0);
 		addSensore(t1);
-		addSensore(q);
 		addSensore(m);
+		addSensore(q);
 
 		addElettrodomestico(a);
 		addElettrodomestico(lvt);
@@ -32,18 +32,19 @@ public class Centralina {
 
 	}
 
+//prende sensori e li mette nell'arraylist
 	public void addSensore(Sensore<?> s) {
 		sensori.add(s);
 
 	}
 
+//getter
 	public ArrayList<Sensore<?>> getSensori() {
 		return sensori;
 	}
 
-	public String statoSensori() { // prende tutti i sensori attivi e con sb costurisce ciò che vuole mostrare inn
-									// interfaccia grafica. Abbiamo aggiunto il controllo per vedere se il sensore è
-									// di temperatura interna per poter stampare le due temperature dei piani
+	public String statoSensori() { // prende tutti i sensori attivi e con string builder costurisce la stringa da
+									// mostrare in interfaccia grafica
 		StringBuilder sb = new StringBuilder();
 		for (Sensore<?> s : sensori) {
 			if (s.running) {
@@ -53,10 +54,12 @@ public class Centralina {
 		return sb.toString();
 	}
 
+//aggiunge l'elettrodomestico all'arraylist
 	public void addElettrodomestico(Elettrodomestico e) {
 		elettrodomestici.add(e);
 	}
 
+//getter 
 	public ArrayList<Elettrodomestico> getElettrodomestici() {
 		return elettrodomestici;
 	}
@@ -74,6 +77,7 @@ public class Centralina {
 		return sb.toString();
 	}
 
+//Controlla se almeno uno dei sensori è on
 	public Boolean sensoriOn() {
 		for (Sensore<?> s : sensori) {
 			if (s.running)
@@ -82,6 +86,7 @@ public class Centralina {
 		return false;
 	}
 
+//controlla se almeno uno dei sensori interni agli elettrodomestici è on
 	public Boolean elettOn() {
 		for (Elettrodomestico e : elettrodomestici) {
 			if (e.running)
@@ -92,6 +97,7 @@ public class Centralina {
 		return false;
 	}
 
+//fa partire tutti i sensori
 	public void startAllS() {
 		for (Sensore<?> s : sensori) {
 			if (!s.running) {
@@ -100,6 +106,7 @@ public class Centralina {
 		}
 	}
 
+//fa partire tutti i sensori degli elettrodomestici 
 	public void startAllE() {
 		for (Elettrodomestico e : elettrodomestici) {
 			if (!e.running) {
@@ -113,12 +120,14 @@ public class Centralina {
 		}
 	}
 
+//ferma tutti i sensori (ovvero ferma la generazione di valori a video)
 	public void stopAllS() {
 		for (Sensore<?> s : sensori) {
 			s.stop();
 		}
 	}
 
+//ferma tutti i sensori degli elettrodomestici (ovvero ferma la generazione di valori a video)
 	public void stopAllE() {
 		for (Elettrodomestico e : elettrodomestici) {
 			e.stop();

@@ -3,6 +3,8 @@ package it.unibs.VAMsmarthouse;
 import java.util.Random;
 
 public class SensoreTInterna extends Sensore<Double> {
+	// Common seed per mantenere una generazione coerente con quella della t esterna
+	// e tra le temperature dei due piani
 	private static final long COMMON_SEED = 1234L;
 	private final Random random = new Random(COMMON_SEED);
 	private final double offset;
@@ -10,6 +12,7 @@ public class SensoreTInterna extends Sensore<Double> {
 	private static final double TMIN = 15.0;
 	private static final double TMAX = 26.0;
 
+//costruttore con diverso l'offset in base al piano 
 	public SensoreTInterna(String id, SensoreTEsterna esterna) {
 		super(id, 500, "Temperatura interna");
 		this.sEsterno = esterna;
@@ -21,9 +24,12 @@ public class SensoreTInterna extends Sensore<Double> {
 
 	}
 
+//override del genera valore per poter generare le temperature interne. Overridiamo in tutte le sosttoclassi di sensore i genera valore perchè è un metodo astratto con un tipo di ritorno generico T
 	@Override
 	protected Double generaValore() {
 		Double esterna = sEsterno.getValue();
+		// se la temperatura esterna non è ancora stata inizializzata supponiamo un
+		// valore generico intorno ai 20 gradi
 		if (esterna == null) {
 			value = 20.0 + (-0.3 + random.nextDouble() * 0.6) + offset;
 			return value;
@@ -46,6 +52,7 @@ public class SensoreTInterna extends Sensore<Double> {
 		return value;
 	}
 
+//Override del to string 
 	@Override
 	public String toString() {
 		return String.format("[%s] [%s] ID=%s, Valore=%.2f °C", Sensore.timeStamp(), type, id, value);

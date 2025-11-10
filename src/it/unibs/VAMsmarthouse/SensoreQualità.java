@@ -9,12 +9,14 @@ public class SensoreQualità extends Sensore<Double> {
 							 * private o public questi due? Private per l'incapsulamento, servono solo in
 							 * questa classe
 							 */
-	private double co2; // cercando su internet dovrebbero essere ppm
+	private double co2; // unità di misura ppm
+//costruttore
 
 	public SensoreQualità(String id) {
 		super(id, 500, "Qualità dell'aria");
 	}
 
+//override del metodo genera valore perchè così mi stampa i 2 valori diversi per umidità e co2
 	@Override
 	protected Double generaValore() {
 		if (inizializzato == false) {
@@ -29,7 +31,8 @@ public class SensoreQualità extends Sensore<Double> {
 		}
 
 		if (umidita < 25)
-			umidita = 25; // manteniamo dei valori realistici in modo tale che non generi robe strane
+			umidita = 25; // manteniamo dei valori realistici in modo tale che non generi valori poco
+							// coerenti con la realtà
 		if (umidita > 75)
 			umidita = 75;
 		if (co2 < 350)
@@ -40,14 +43,15 @@ public class SensoreQualità extends Sensore<Double> {
 		return co2;
 
 		/*
-		 * qui abbiamo chiesto a chat come poter avere una base dell'umidita per
-		 * riuscire ad avere co2 coerente; aggiungiamo una piccola variazione in co2 e
-		 * in umidita in modo tale che sia coerente con la logica degli altri sensori
-		 * (vedi metodo genera valore in temperatura interna) e coerente con la realtà
+		 * come poter avere una base dell'umidita per riuscire ad avere co2 coerente?
+		 * aggiungiamo una piccola variazione in co2 e in umidita in modo tale che sia
+		 * coerente con la logica degli altri sensori (vedi metodo genera valore in
+		 * temperatura interna) e coerente con la realtà
 		 */
 
 	}
 
+//getter
 	public double getUmidita() {
 		return umidita;
 	}
@@ -56,6 +60,7 @@ public class SensoreQualità extends Sensore<Double> {
 		return co2;
 	}
 
+//override del tostring per poter stampare diversi messaggi in base ai valori generati 
 	@Override
 	public String toString()
 	/*
