@@ -20,7 +20,6 @@ public class SensoreTEsterna extends Sensore<Double> {
 
 		double variazione = -0.01 + (random.nextDouble() * 0.02);
 		value += variazione;
-
 		return value;
 	}
 
