@@ -23,8 +23,7 @@ import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 
 public class MyFrame {
-	// creamo tutto, finestra, pannelli e cardLayout (per contenere tutti i
-	// pannelli)
+
 	public JFrame frame;
 	public JPanel mainPanel;
 	public CardLayout cardLayout;
@@ -37,7 +36,6 @@ public class MyFrame {
 	private javax.swing.Timer timerSensoriPanel, timerElettroPanel;
 	private Centralina centralina = new Centralina();
 
-//Sfondo bellino
 	private static class Sfondo extends JPanel {
 		@Override
 		protected void paintComponent(Graphics g) {
@@ -61,63 +59,56 @@ public class MyFrame {
 		}
 	}
 
-	public MyFrame() { // è il costruttore
+	public MyFrame() {
 		initialize();
 	}
 
-	private void initialize() { // è quello che dovrei mettere nel costruttore ma faccio così perchè è più
-								// ordinato
-		frame = new JFrame("VAM Smart House"); // creo la cornice per davvero
-		frame.setBounds(100, 100, 640, 480); // prende in input anche la posizione della finestra (x, y, w, h)
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // è la x per chiudere
-		frame.setLayout(new BorderLayout()); // specifico il layout per la finestra
-
+	private void initialize() {
+		frame = new JFrame("VAM Smart House");
+		frame.setBounds(100, 100, 640, 480);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setLayout(new BorderLayout());
 		cardLayout = new CardLayout();
-		mainPanel = new JPanel(cardLayout); // questo è il panel per gestire le card
-		mainPanel.add(menuPanel(), "menu"); // prima card
-//aggiungiamo il pannrllo dei sensori
+		mainPanel = new JPanel(cardLayout);
+		mainPanel.add(menuPanel(), "menu");
+
 		mainPanel.add(createPanel("Sensori", centralina.getSensori(), centralina::startAllS, centralina::stopAllS,
 				s -> s.getType(), s -> s.start(), s -> s.stop(), () -> centralina.statoSensori()), "Sensori");
-//aggiungiamo il pannello degli elettrodomestici
+
 		mainPanel.add(createPanel("Elettrodomestici", centralina.getElettrodomestici(), centralina::startAllE,
 				centralina::stopAllE, e -> e.getType(), e -> e.start(), e -> e.stop(),
 				() -> centralina.statoElettrodomestici()), "Elettrodomestici");
 
-		frame.add(mainPanel); // aggiunge il pannello che gestisce le card alla finestra
+		frame.add(mainPanel);
 	}
 
-//mostra la card sensori
 	protected void viewPanelS() {
-		cardLayout.show(mainPanel, "Sensori"); // "sensori" è il nome della card creata con creaPannello
+		cardLayout.show(mainPanel, "Sensori");
 	}
 
-//mostra la card elettrodomestici
 	protected void viewPanelE() {
-		cardLayout.show(mainPanel, "Elettrodomestici"); // nome della card corrispondente
+		cardLayout.show(mainPanel, "Elettrodomestici");
 	}
 
-//Pannello menù
 	protected JPanel menuPanel() {
 		JPanel menuPanel = new Sfondo();
 		menuPanel.setLayout(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
 
-		// questo centra il bottone
 		gbc.insets = new Insets(20, 0, 20, 0);
 		gbc.gridx = 0;
-		gbc.anchor = GridBagConstraints.CENTER; // centra orizzontalmente
+		gbc.anchor = GridBagConstraints.CENTER;
 
-		// Etichetta
 		JLabel casaLabel = new JLabel("VAM Smart House", SwingConstants.CENTER);
 		casaLabel.setForeground(Color.WHITE);
 		casaLabel.setFont(new Font("Arial", Font.BOLD, 35));
 		casaLabel.setOpaque(false);
-		gbc.gridy = 0; // lo mette nella prima riga
+		gbc.gridy = 0;
 		menuPanel.add(casaLabel, gbc);
-//tutte impostazioni dei btn
+
 		JButton btnViewS = new JButton("Visualizza sensori");
 		btnViewS.addActionListener(_ -> viewPanelS());
-		btnViewS.setOpaque(false); // nessuno sfondo
+		btnViewS.setOpaque(false);
 		btnViewS.setForeground(Color.BLACK);
 		btnViewS.setFocusPainted(false);
 		btnViewS.setFont(new Font("Arial", Font.BOLD, 16));
@@ -143,8 +134,7 @@ public class MyFrame {
 			cardLayout.show(mainPanel, "Sensori");
 			if (timerSensoriPanel != null && !timerSensoriPanel.isRunning()) {
 				timerSensoriPanel.start();
-			} // questo ciclo for sotto mi mette la parolina Stop dopo che sono stati avviati
-				// tutti i sensori
+			}
 			for (Component comp : leftPanelS.getComponents()) {
 				if (comp instanceof JButton btn) {
 
@@ -173,12 +163,12 @@ public class MyFrame {
 				if (!timerElettroPanel.isRunning()) {
 					timerElettroPanel.start();
 				}
-			} // questo ciclo for sotto mi mette la parolina Stop dopo che sono stati avviati
-				// tutti i sensori
-			for (Component comp : leftPanelE.getComponents()) {
-				if (comp instanceof JButton btn) {
-					btn.setText(btn.getText() + " Stop");
-					btn.putClientProperty("running", true);
+
+				for (Component comp : leftPanelE.getComponents()) {
+					if (comp instanceof JButton btn) {
+						btn.setText(btn.getText() + " Stop");
+						btn.putClientProperty("running", true);
+					}
 				}
 			}
 		});
@@ -197,14 +187,12 @@ public class MyFrame {
 		BtnPanel.add(btnViewE);
 		BtnPanel.add(btnStartAllS);
 		BtnPanel.add(btnStartAllE);
-//mette i bottoni nella seconda riga
-		gbc.gridy = 1; // seconda riga
+		gbc.gridy = 1;
 		menuPanel.add(BtnPanel, gbc);
 
 		return menuPanel;
 	}
 
-//Crea il secondo pannello 
 	private <T> JPanel createPanel(String titolo, java.util.List<T> elementi, Runnable startAll, Runnable stopAll,
 			java.util.function.Function<T, String> getType, java.util.function.Consumer<T> startElemento,
 			java.util.function.Consumer<T> stopElemento, java.util.function.Supplier<String> statoSupplier) {
@@ -212,7 +200,6 @@ public class MyFrame {
 		JPanel panel = new Sfondo();
 		panel.setLayout(new BorderLayout());
 
-		// Storico
 		JTextArea storico = new JTextArea(25, 40);
 		storico.setEditable(false);
 		storico.setLineWrap(true);
@@ -221,11 +208,10 @@ public class MyFrame {
 		scroll.setPreferredSize(new Dimension(400, 500));
 		scroll.setVisible(false);
 
-		// Pulsante x per chiudere storico
 		JButton closeStorico = new JButton("X");
 		closeStorico.setFont(new Font("Arial", Font.BOLD, 14));
 		closeStorico.setOpaque(true);
-		closeStorico.setBackground(Color.WHITE);// nessuno sfondo al bottone x
+		closeStorico.setBackground(Color.WHITE);
 		closeStorico.setForeground(Color.BLACK);
 		closeStorico.setFocusPainted(false);
 		closeStorico.setBorderPainted(false);
@@ -241,30 +227,30 @@ public class MyFrame {
 		} else {
 			closeStoricoE = closeStorico;
 		}
-		// Pannello per tenere insieme titolo X e area testo
+
 		JPanel barraExit = new JPanel(new BorderLayout());
 		barraExit.setOpaque(true);
 		barraExit.setBackground(Color.WHITE);
 		barraExit.add(closeStorico, BorderLayout.EAST);
-//aggiunge i due pannelli al pannello storico
+
 		JPanel storicoPanel = new JPanel(new BorderLayout());
 		storicoPanel.add(barraExit, BorderLayout.NORTH);
 		storicoPanel.add(scroll, BorderLayout.CENTER);
 		panel.add(storicoPanel, BorderLayout.EAST);
-		// Pannello centrale con i bottoni
+
 		JPanel centerPanel = new JPanel(new GridBagLayout());
 		centerPanel.setOpaque(false);
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.gridx = 0;
 		gbc.insets = new Insets(10, 0, 10, 0);
 		gbc.anchor = GridBagConstraints.CENTER;
-//mette i titoli ai due pannelli 
+
 		JLabel titleLabel = new JLabel(titolo, SwingConstants.CENTER);
 		titleLabel.setForeground(Color.WHITE);
 		titleLabel.setFont(new Font("Arial", Font.BOLD, 28));
 		gbc.gridy = 0;
 		centerPanel.add(titleLabel, gbc);
-//Ciclo for che crea tutti i bottoni tranne t0 e t1
+
 		int y = 1;
 		for (T elemento : elementi) {
 			if (titolo.equals("Sensori") && (elemento instanceof SensoreTInterna)) {
@@ -274,18 +260,15 @@ public class MyFrame {
 			btn.setPreferredSize(new Dimension(250, 40));
 			btn.setFont(new Font("Arial", Font.BOLD, 16));
 			btn.putClientProperty("running", false); // proprietà running
-//li fa effettivamente funzionare e aggiunge la parola stop quando premo il pulsante
 			btn.addActionListener(_ -> {
 				boolean running = (boolean) btn.getClientProperty("running");
 				if (!running) {
 					startElemento.accept(elemento);
 					btn.setText(getType.apply(elemento) + " Stop");
 					btn.putClientProperty("running", true);
-					// Stampa a videp il messaggio "Sensore x avviato"
 					storico.append(getType.apply(elemento) + " Avviato\n");
 					scroll.setVisible(true);
 					closeStorico.setVisible(true);
-					// Fa partire il timer che ogni tot genera i risultati a video
 					if (titolo.equals("Sensori")) {
 						if (timerSensoriPanel != null && !timerSensoriPanel.isRunning())
 							timerSensoriPanel.start();
@@ -297,7 +280,6 @@ public class MyFrame {
 					stopElemento.accept(elemento);
 					btn.setText(getType.apply(elemento));
 					btn.putClientProperty("running", false);
-					// Stampa a video in storico "Sensore x fermato"
 					storico.append(getType.apply(elemento) + " Fermato\n");
 				}
 			});
@@ -305,7 +287,7 @@ public class MyFrame {
 			gbc.gridy = y++;
 			centerPanel.add(btn, gbc);
 		}
-//Facciamo la stessa cosa con sensori t0 e t1, ovvero la temperatura interna 
+
 		if (titolo.equals("Sensori")) {
 			SensoreTInterna t0 = centralina.t0;
 			SensoreTInterna t1 = centralina.t1;
@@ -317,7 +299,6 @@ public class MyFrame {
 			btnTempInterna.putClientProperty("running", false);
 			gbc.gridy = y++;
 			centerPanel.add(btnTempInterna, gbc);
-//fa partire sia per la t0 sia per la t1
 			btnTempInterna.addActionListener(_ -> {
 				if (!btnTempInterna.getText().endsWith("Stop")) {
 					t0.start();
@@ -341,7 +322,6 @@ public class MyFrame {
 
 		panel.add(centerPanel, BorderLayout.CENTER);
 
-		// Pannello inferiore con Indietro e Stop All
 		JPanel bottomPanel = new JPanel(new BorderLayout());
 		bottomPanel.setOpaque(false);
 
@@ -353,7 +333,6 @@ public class MyFrame {
 		stop.addActionListener(_ -> {
 			stopAll.run();
 			storico.append("Tutti fermati\n");
-//facciamo in modo che una volta schiacciato stop tutti i pulsanti tornino allo stato iniziale
 			for (Component comp : centerPanel.getComponents()) {
 				if (comp instanceof JButton btn) {
 					String text = btn.getText();

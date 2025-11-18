@@ -7,7 +7,6 @@ public abstract class Elettrodomestico implements Runnable {
 	protected String type;
 	protected StatoElettrodomestico stato;
 
-//Costruttore
 	public Elettrodomestico(String id, long time, String type) {
 		this.id = id;
 		this.time = time;
@@ -16,10 +15,8 @@ public abstract class Elettrodomestico implements Runnable {
 
 	}
 
-//generiamo un sensore interno all'elettrodomestico
 	protected Sensore<?> sensore;
 
-//getter 
 	public String getType() {
 		return type;
 	}
@@ -32,10 +29,8 @@ public abstract class Elettrodomestico implements Runnable {
 		return stato;
 	}
 
-//Metodo astratto che genera lo stato dell'elettrodomestico, verrà overridato in ogni sottoclasse
 	protected abstract StatoElettrodomestico generaStato();
 
-//Setter e getter del sensore 
 	public void setSensore(Sensore<?> s) {
 		this.sensore = s;
 	}
@@ -44,7 +39,6 @@ public abstract class Elettrodomestico implements Runnable {
 		return sensore;
 	}
 
-//Metodo che fa partire il thread
 	@Override
 	public void run() {
 		running = true;
@@ -59,7 +53,6 @@ public abstract class Elettrodomestico implements Runnable {
 		}
 	}
 
-//metodo che fa partire il sensore 
 	public void start() {
 		if (!running) {
 			running = true;
@@ -67,7 +60,6 @@ public abstract class Elettrodomestico implements Runnable {
 		}
 	}
 
-//stoppa il sensore
 	public void stop() {
 		running = false;
 		if (sensore != null) {

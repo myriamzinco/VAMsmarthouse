@@ -11,7 +11,6 @@ public class Asciugatrice extends Elettrodomestico {
 
 	}
 
-//Metodo genera stato. Se spento resta spento, se running può andare in errore, se in errore resta errore
 	@Override
 	public StatoElettrodomestico generaStato() {
 		switch (stato) {
