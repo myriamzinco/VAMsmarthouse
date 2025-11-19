@@ -357,8 +357,6 @@ public class MyFrame {
 		});
 		timer.stop();
 
-		// Associa i componenti (scroll, pannello pulsanti e timer) al tipo di pannello
-		// creato per poterli poi gestire dal menu principale
 		if (titolo.equals("Sensori")) {
 			scrollSensori = scroll;
 			leftPanelS = centerPanel;
